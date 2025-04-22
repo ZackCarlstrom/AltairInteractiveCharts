@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="https://cdn.jsdelivr.net/npm/vega@6.1.2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-lite@6.1.0"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-embed@7.0.1"></script>
+  <style>
+    .vega-bind {
+      padding-left: 85px;
+      margin-bottom: 12px;
+    }
+
+    .vega-bind label {
+      font-family: "Trebuchet MS";
+      font-size: 20px;
+      color: #4f4f4f;
+      margin-right: 8px;
+    }
+
+    .vega-bind select {
+      font-family: "Trebuchet MS";
+      font-size: 20px;
+      padding: 6px 10px;
+      color: #4f4f4f;
+      border-radius: 4px;
+      border: 1px solid #aaa;
+      background-color: #f8f8f8;
+    }
+
+    .divider {
+      border-top: 2px  #7F7F7F;
+      margin: 20px 85px 12px 85px;
+    }
+
+    .chart-note {
+      font-family: "Trebuchet MS";
+      font-size: 18px;
+      color: #7F7F7F;
+      padding-left: 85px;
+    }
+  </style>
+</head>
+<body>
+  <div id="vis"></div>
+  <div class="divider"></div>
+  <div class="chart-note">
+    The smoking rate among <span style="color: black; font-weight: bold;">young adults (18-24 yrs)</span> dropped from 
+    <span style="color: black; font-weight: bold;">28.5%</span> in 
+    <span style="color: black; font-weight: bold;">2002</span> to just 
+    <span style="color: black; font-weight: bold;">4.9%</span> in 
+    <span style="color: black; font-weight: bold;">2022</span>, the largest decline of any age group.
+  </div>
+  
+  <script>
+    const spec = {
+      "$schema": "https://vega.github.io/schema/vega-lite/v5.20.1.json",
+      "width": 900,
+      "height": 400,
+      "title": "Cigarette Smoking by Age Cohort (Select Year)",
+      "data": {
+        "name": "data-ba14d44361040c33c961c831f26d639f"
+      },
+      "params": [
+        {
+          "name": "YearSelector",
+          "bind": {
+            "input": "select",
+            "options": [1998, 2002, 2006, 2010, 2014, 2018, 2022],
+            "name": "Year: "
+          },
+          "value": 2022
+        }
+      ],
+      "config": {
+        "view": {
+          "continuousWidth": 300,
+          "continuousHeight": 300,
+          "fill": null,
+          "stroke": null
+        },
+        "axisX": {
+          "grid": false,
+          "labelColor": "#7F7F7F",
+          "labelFont": "Trebuchet MS",
+          "labelFontSize": 18,
+          "titleFontSize": 18
+        },
+        "axisY": {
+          "domain": true,
+          "domainColor": "#7F7F7F",
+          "domainWidth": 2,
+          "grid": false,
+          "labelColor": "#7F7F7F",
+          "labelFont": "Trebuchet MS",
+          "labelFontSize": 18,
+          "tickWidth": 2,
+          "titleFontSize": 18
+        },
+        "title": {
+          "font": "Trebuchet MS",
+          "fontSize": 28  /* ← Increased title font size */
+        }
+      },
+      "layer": [
+        {
+          "mark": {"type": "bar", "size": 60},
+          "encoding": {
+            "color": {
+              "field": "Cohort",
+              "type": "nominal",
+              "scale": {
+                "range": ["#f47942", "#4f6980", "#b66353", "#fbb04e"]
+              },
+              "legend": null
+            },
+            "x": {
+              "field": "Percent",
+              "type": "quantitative",
+              "scale": {"domain": [0, 30]},
+              "axis": {
+                "domain": false,
+                "grid": false,
+                "labels": false,
+                "ticks": false,
+                "title": null
+              }
+            },
+            "y": {
+              "field": "Cohort",
+              "type": "nominal",
+              "axis": {
+                "grid": false,
+                "labelAngle": 0,
+                "title": null
+              }
+            }
+          },
+          "transform": [{"filter": "datum.Year === YearSelector"}]
+        },
+        {
+          "mark": {
+            "type": "text",
+            "align": "left",
+            "dx": 3,
+            "fill": "#7F7F7F",
+            "font": "Trebuchet MS",
+            "fontSize": 18
+          },
+          "encoding": {
+            "text": {"field": "label", "type": "nominal"},
+            "x": {"field": "Percent", "type": "quantitative"},
+            "y": {"field": "Cohort", "type": "nominal"}
+          },
+          "transform": [
+            {"filter": "datum.Year === YearSelector"},
+            {"calculate": "format(datum.Percent, '.1f') + '%'", "as": "label"}
+          ]
+        }
+      ],
+      "datasets": {
+        "data-ba14d44361040c33c961c831f26d639f": [
+          {"Year": 2022, "Cohort": "18-24 yrs", "Percent": 4.9},
+          {"Year": 2018, "Cohort": "18-24 yrs", "Percent": 7.8},
+          {"Year": 2014, "Cohort": "18-24 yrs", "Percent": 16.7},
+          {"Year": 2010, "Cohort": "18-24 yrs", "Percent": 20.1},
+          {"Year": 2006, "Cohort": "18-24 yrs", "Percent": 23.7},
+          {"Year": 2002, "Cohort": "18-24 yrs", "Percent": 28.5},
+          {"Year": 1998, "Cohort": "18-24 yrs", "Percent": 27.9},
+          {"Year": 2022, "Cohort": "25-44 yrs", "Percent": 12.5},
+          {"Year": 2018, "Cohort": "25-44 yrs", "Percent": 16.5},
+          {"Year": 2014, "Cohort": "25-44 yrs", "Percent": 20},
+          {"Year": 2010, "Cohort": "25-44 yrs", "Percent": 22},
+          {"Year": 2006, "Cohort": "25-44 yrs", "Percent": 23.2},
+          {"Year": 2002, "Cohort": "25-44 yrs", "Percent": 25.7},
+          {"Year": 1998, "Cohort": "25-44 yrs", "Percent": 27.5},
+          {"Year": 2022, "Cohort": "45-64 yrs", "Percent": 15.1},
+          {"Year": 2018, "Cohort": "45-64 yrs", "Percent": 16.3},
+          {"Year": 2014, "Cohort": "45-64 yrs", "Percent": 18},
+          {"Year": 2010, "Cohort": "45-64 yrs", "Percent": 21.1},
+          {"Year": 2006, "Cohort": "45-64 yrs", "Percent": 21.5},
+          {"Year": 2002, "Cohort": "45-64 yrs", "Percent": 22.7},
+          {"Year": 1998, "Cohort": "45-64 yrs", "Percent": 25},
+          {"Year": 2022, "Cohort": "65+ yrs", "Percent": 8.7},
+          {"Year": 2018, "Cohort": "65+ yrs", "Percent": 8.4},
+          {"Year": 2014, "Cohort": "65+ yrs", "Percent": 8.5},
+          {"Year": 2010, "Cohort": "65+ yrs", "Percent": 9.5},
+          {"Year": 2006, "Cohort": "65+ yrs", "Percent": 10},
+          {"Year": 2002, "Cohort": "65+ yrs", "Percent": 9.3},
+          {"Year": 1998, "Cohort": "65+ yrs", "Percent": 10.9}
+        ]
+      }
+    };
+    vegaEmbed("#vis", spec, {mode: "vega-lite"}).then(console.log).catch(console.warn);
+  </script>
+</body>
+</html>
